@@ -5,7 +5,7 @@ A Japanese verb/adjective inflections tool for python.
 PyKatsuyou uses these great packages:
 
 - [igo-python](https://github.com/hideaki-t/igo-python) (detecting verbs and adjectives)
-- [jaconv](https://github.com/ikegami-yukino/jaconv) (convert kanji --> hiragana)
+- [jaconv](https://github.com/ikegami-yukino/jaconv) (convert katakana --> hiragana)
 - [tabulate](https://github.com/astanin/python-tabulate) (print a table)
 
 ## Install
