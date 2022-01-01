@@ -2,7 +2,11 @@
 
 A Japanese verb/adjective inflections tool for python.  
 
-PyKatsuyou uses other great packages: [igo-python](https://github.com/hideaki-t/igo-python) (detecting verbs and adjectives) and [jaconv](https://github.com/ikegami-yukino/jaconv) (convert kanji --> hiragana). 
+PyKatsuyou uses these great packages:
+
+- [igo-python](https://github.com/hideaki-t/igo-python) (detecting verbs and adjectives)
+- [jaconv](https://github.com/ikegami-yukino/jaconv) (convert kanji --> hiragana)
+- [tabulate](https://github.com/astanin/python-tabulate) (print a table)
 
 ## Install
 
@@ -108,4 +112,3 @@ Options:
 <tr><td>Volitional     </td><td>行こう       </td><td>ｘ              </td></tr>
 </tbody>
 </table>
-
