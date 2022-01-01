@@ -1,0 +1,1 @@
+from .pykatsuyou import getInflections
