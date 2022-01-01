@@ -16,6 +16,8 @@ pip install pykatsuyou
 
 ## Usage
 
+This tool requires that you input the dictionary form of the verb/adjective. Using only hiragana may have strange results (unless it's an irregular verb).
+
 ```python
 from tabulate import tabulate
 from pykatsuyou import getInflections
