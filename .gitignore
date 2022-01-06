@@ -1,4 +1,4 @@
 __pycache__/
 *.egg-info/
-tests/
 dist/
+.vscode
