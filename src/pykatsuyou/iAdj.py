@@ -13,21 +13,22 @@ class IAdj:
     
     def useRules(self, adj: str):
         cutAdj = adj.replace('い', '')
-        data = {'Affirmative': [], 'Negative': []}
+        affirmative = []
+        negative = []
         if adj[-2:] == 'いい':
             for value in self.rules['Affirmative']:
                 if self.rules['Affirmative'].index(value) == 1:
-                    data['Affirmative'].append(cutAdj + 'よ' + value)
+                    affirmative.append(cutAdj + 'よ' + value)
                 else:
-                    data['Affirmative'].append(adj)
+                    affirmative.append(adj)
             for value in self.rules['Negative']:
-                data['Negative'].append(cutAdj + value)
+                negative.append(cutAdj + value)
         else:
             for value in self.rules['Affirmative']:
-                data['Affirmative'].append(cutAdj + value)
+                affirmative.append(cutAdj + value)
             for value in self.rules['Negative']:
-                data['Negative'].append(cutAdj + value)
-        return(data)
+                negative.append(cutAdj + value)
+        return affirmative, negative
 
     def getForms(self, adj: str):
         '''
@@ -35,7 +36,7 @@ class IAdj:
 
         @param adj - needs plain adjective
         '''
-        results = self.useRules(adj)
+        affirmative, negative = self.useRules(adj)
 
-        data = CreateDataFrame(results, 'い Adjective').createDataFrame()
+        data = CreateDataFrame({'Affirmative': affirmative, 'Negative': negative}, 'い Adjective').createDataFrame()
         return data

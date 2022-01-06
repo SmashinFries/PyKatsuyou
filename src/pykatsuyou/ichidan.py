@@ -12,7 +12,7 @@ class Ichidan:
     
     ichi = Ichidan()
 
-    ichi.getForms('あそぶ')
+    ichi.getForms('上げる')
 
     '''
     def __init__(self):
@@ -24,21 +24,22 @@ class Ichidan:
     def getRules(self):
         return self.rules
 
-    def useRules(self, verb: str):
+    def applyRules(self, verb: str):
         cutVerb = verb.replace('る', '')
-        data = {'Affirmative': [], 'Negative': []}
+        affirmative = []
+        negative = []
         for value in self.rules['Affirmative']:
-            data['Affirmative'].append(cutVerb + value)
+            affirmative.append(cutVerb + value)
         for value in self.rules['Negative']:
             if value == 'ｘ':
-                data['Negative'].append(value)
+                negative.append(value)
             else:
                 if self.rules['Negative'].index(value) == 5:
-                    data['Negative'].append(verb + value)
+                    negative.append(verb + value)
                 else: 
-                    data['Negative'].append(cutVerb + value)
+                    negative.append(cutVerb + value)
             
-        return data 
+        return affirmative, negative
 
     def getForms(self, verb: str):
         '''
@@ -46,7 +47,7 @@ class Ichidan:
 
         @param verb - needs dictionary form
         '''
-        results = self.useRules(verb)
+        affirmative, negative = self.applyRules(verb)
 
-        data = CreateDataFrame(results, 'Ichidan Verb').createDataFrame()
+        data = CreateDataFrame({'Affirmative': affirmative, 'Negative': negative}, 'Ichidan Verb').createDataFrame()
         return data

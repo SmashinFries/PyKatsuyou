@@ -41,47 +41,47 @@ class Godan:
         
         return loc
 
-    def nonU(self, verb:str, loc:int, data:dict):
+    def append_Stems(self, verb:str, value:str, ending:list, locs:list) -> str:
+        if self.rules['Affirmative'].index(value) == locs[0]:
+            return verb[:-1] + ending[0]
+        elif self.rules['Affirmative'].index(value) == locs[1]:
+            return verb[:-1] + ending[1]
+        else:
+            return verb[:-1] + value
+
+    def nonU(self, verb:str, loc:int):
+        affirmative = []
+        negative = []
         for value in self.rules['Affirmative']:
             if self.rules['Affirmative'].index(value) in self.checkIndex:
                 # If iku then...
                 if self.hira[-2:] == 'いく':
-                    data['Affirmative'].append(verb[:-1] + (value[:0] + 'っ' + value[1:]))
+                    affirmative.append(verb[:-1] + (value[:0] + 'っ' + value[1:]))
                 # If has m~, n~, b~ then...
                 elif self.hira[-1] in self.mnbStems:
-                    if self.rules['Affirmative'].index(value) == 3:
-                        data['Affirmative'].append(verb[:-1] + 'んだ')
-                    elif self.rules['Affirmative'].index(value) == 4:
-                        data['Affirmative'].append(verb[:-1] + 'んで')
-                    else:
-                        data['Affirmative'].append(verb[:-1] + value)
+                    affirmative.append(self.append_Stems(verb, value, ['んだ', 'んで'], [2, 4]))
                 # If has w~, t~, r~ then...
                 elif self.hira[-1] in self.wtrStems:
-                    if self.rules['Affirmative'].index(value) == 3 or self.rules['Affirmative'].index(value) == 4:
-                        data['Affirmative'].append(verb[:-1] + (value[:0] + 'っ' + value[1:]))
+                    if self.rules['Affirmative'].index(value) == 2 or self.rules['Affirmative'].index(value) == 4:
+                        affirmative.append(verb[:-1] + (value[:0] + 'っ' + value[1:]))
                     else:
-                        data['Affirmative'].append(verb[:-1] + value)
+                        affirmative.append(verb[:-1] + value)
                 # If has k~ then...
                 elif self.hira[-1] in self.kStems:
-                    if self.rules['Affirmative'].index(value) == 3:
-                        data['Affirmative'].append(verb[:-1] + 'いた')
-                    elif self.rules['Affirmative'].index(value) == 4:
-                        data['Affirmative'].append(verb[:-1] + 'いて')
+                    affirmative.append(self.append_Stems(verb, value, ['いた', 'いて'], [2, 4]))
                 # If has g~ then...
                 elif self.hira[-1] in self.gStems:
-                    if self.rules['Affirmative'].index(value) == 3:
-                        data['Affirmative'].append(verb[:-1] + 'いだ')
-                    elif self.rules['Affirmative'].index(value) == 4:
-                        data['Affirmative'].append(verb[:-1] + 'いで')
+                    affirmative.append(self.append_Stems(verb, value, ['いだ', 'いで'], [2, 4]))
                 else:
-                    data['Affirmative'].append(verb[:-1] + PAIRS[value[0]][loc] + value[1:])
+                    affirmative.append(verb[:-1] + PAIRS[value[0]][loc] + value[1:])
             else: 
-                data['Affirmative'].append(verb[:-1] + PAIRS[value[0]][loc] + value[1:])
+                affirmative.append(verb[:-1] + PAIRS[value[0]][loc] + value[1:])
         for value in self.rules['Negative']:
             if value == 'ｘ':
-                data['Negative'].append(value)
+                negative.append(value)
             else: 
-                data['Negative'].append(verb[:-1] + PAIRS[value[0]][loc] + value[1:])
+                negative.append(verb[:-1] + PAIRS[value[0]][loc] + value[1:])
+        return affirmative, negative
 
     def isU(self, verb:str, loc:int, data:dict):
         for value in self.rules['Affirmative']:
@@ -103,7 +103,9 @@ class Godan:
             data = {'Affirmative': [], 'Negative': []}
             if loc != -1:
                 if verb[-1] != 'う':
-                    self.nonU(verb, loc, data)
+                    affirmative, negative = self.nonU(verb, loc)
+                    data['Affirmative'] = affirmative
+                    data['Negative'] = negative
                 elif verb[-1] == 'う':
                     self.isU(verb, loc, data)
             return data

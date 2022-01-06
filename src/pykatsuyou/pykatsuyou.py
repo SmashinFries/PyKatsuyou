@@ -35,8 +35,6 @@ def getInflections(text: str, jsonIndent: int = 0, dataframe:bool = False):
 
     """
     
-    # Too many if statements?😅
-
     PAIRS = {
     # V     V    ka    ga    sa    za  　ta    da    na    ha    ba    ma    ya   ra    wa
     'あ': ['あ', 'か', 'が', 'さ', 'ざ', 'た', 'だ', 'な', 'は', 'ば', 'ま', 'や', 'ら', 'わ'], 
@@ -50,10 +48,8 @@ def getInflections(text: str, jsonIndent: int = 0, dataframe:bool = False):
 
     tt = Tagger()
     check = tt.parse(text)
-    temp = check[-1].feature.split(',')
-    hira = kata2hira(temp[-1])
+    posDivided = check[-1].feature.split(',') if len(check) > 0 else []
     
-    go = Godan(hira)
     ichi = Ichidan()
     iadj = IAdj()
     irreg = IrregularVerb()
@@ -72,9 +68,10 @@ def getInflections(text: str, jsonIndent: int = 0, dataframe:bool = False):
         else:
             return False
 
-    def ruDecider3000():
+    def ruDecider3000(hira:str):
         if (hira[-2] in PAIRS['あ']) or (hira[-2] in PAIRS['う']) or (hira[-2] in PAIRS['お'] or (text in EXCEPTIONS)):
             # It is GODAN
+            go = Godan(hira)
             result = go.getForms(text)
             return result
         elif (hira[-2] in PAIRS['い'] or hira[-2] in PAIRS['え'] and text not in EXCEPTIONS):
@@ -82,56 +79,54 @@ def getInflections(text: str, jsonIndent: int = 0, dataframe:bool = False):
             result = ichi.getForms(text)
             return result
         else:
-            print('Failed:', hira[-2])
+            return {'Affirmative': [], 'Negative': []}
 
-    def finalizeVerb(data):
+    def finalizeVerb(data, hira:str):
         # Get Data
         if text not in IRREGULARS:
             if text[-1] == 'る':
-                data = ruDecider3000()
+                data = ruDecider3000(hira)
             else:
+                go = Godan(hira)
                 result = go.getForms(text)
                 data = result
         else:
             data = irreg.getForms(text)
-            pass
         
         # Finalize
         if dataframe:
             return data
-        else:
+        elif len(data) > 0 and len(data['Affirmative']) > 0:
             dataArr = []
-            for item in list(data['Affirmative'].values[1:]):
+            for item in list(data['Affirmative'].values):
                 dataArr.append(item)
-            for item in list(data['Negative'].values[1:]):
+            for item in list(data['Negative'].values):
                 if item == 'ｘ':
                     pass
                 else:
                     dataArr.append(item)
             return {'json': data.to_json(force_ascii=False, indent=jsonIndent), 'list': dataArr}
+        else:
+            return {'json': '', 'list': []}
 
     def finalizeAdj(data):
         result = iadj.getForms(text)
-        data = result
-
         if dataframe:
-            return data
+            return result
         else:
             dataArr = []
-            for item in list(data['Affirmative'].values[1:]):
+            for item in list(result['Affirmative'].values):
                 dataArr.append(item)
-            for item in list(data['Negative'].values[1:]):
-                if item == 'ｘ':
-                    pass
-                else:
-                    dataArr.append(item)
-            return {'json': data.to_json(force_ascii=False, indent=jsonIndent), 'list': dataArr}
+            for item in list(result['Negative'].values):
+                dataArr.append(item)
+            return {'json': result.to_json(force_ascii=False, indent=jsonIndent), 'list': dataArr}
 
-    if isVerb():
-        final = finalizeVerb(data)
+    if isVerb() and len(posDivided) > 0:
+        hira = kata2hira(posDivided[-1])
+        final = finalizeVerb(data, hira)
         return final
     elif isAdj():
         final = finalizeAdj(data)
         return final
     else:
-        return {'json': 'ⓧ', 'list': ['Not a verb/adjective']}
+        return {'json': 'Not a verb/adjective', 'list': []}
