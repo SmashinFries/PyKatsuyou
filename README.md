@@ -1,4 +1,4 @@
-# PyKatsuyou
+# PyKatsuyou [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/C0C7C2AUX)
 
 A Japanese verb/adjective inflections tool for python.  
 
