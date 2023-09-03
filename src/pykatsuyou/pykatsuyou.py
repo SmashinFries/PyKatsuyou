@@ -8,7 +8,7 @@ from .ichidan import Ichidan
 from .iAdj import IAdj
 from .irregulars import IrregularVerb
 
-def getInflections(text: str, jsonIndent: int = 0, dataframe:bool = False):
+def getInflections(text: str, jsonIndent: int = 0, dataframe: bool = False, tt: Tagger = Tagger()):
     """
     Get the inflections of a verb or adjective.
 
@@ -46,7 +46,6 @@ def getInflections(text: str, jsonIndent: int = 0, dataframe:bool = False):
     EXCEPTIONS = ['入る', '走る', '要る', '帰る', '限る', '切る', '喋る', '知る', '湿る', 'しゃべる', '減る', '焦る', '蹴る', '滑る', '握る', '練る', '参る', '交じる', '嘲る', '覆る', '遮る', '罵る', '捻る', '翻る', '滅入る', '蘇る']
     IRREGULARS = ['する', '為る', 'くる', '来る']
 
-    tt = Tagger()
     check = tt.parse(text)
     posDivided = check[-1].feature.split(',') if len(check) > 0 else []
     
