@@ -8,9 +8,7 @@ from .ichidan import Ichidan
 from .iAdj import IAdj
 from .irregulars import IrregularVerb
 
-tt = Tagger()
-
-def getInflections(text: str, jsonIndent: int = 0, dataframe:bool = False):
+def getInflections(text: str, jsonIndent: int = 0, dataframe: bool = False, tt: Tagger = Tagger()):
     """
     Get the inflections of a verb or adjective.
 
