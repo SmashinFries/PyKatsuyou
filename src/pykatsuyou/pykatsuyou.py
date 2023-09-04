@@ -3,6 +3,7 @@
 from pandas.core.frame import DataFrame
 from igo.tagger import Tagger
 from jaconv import kata2hira
+from .exceptions import UnknownVerbError
 from .godan import Godan
 from .ichidan import Ichidan
 from .iAdj import IAdj
@@ -68,6 +69,9 @@ def getInflections(text: str, jsonIndent: int = 0, dataframe: bool = False, tt: 
             return False
 
     def ruDecider3000(hira:str):
+        if (len(hira) < 2):
+                raise UnknownVerbError(text)
+        
         if (hira[-2] in PAIRS['あ']) or (hira[-2] in PAIRS['う']) or (hira[-2] in PAIRS['お'] or (text in EXCEPTIONS)):
             # It is GODAN
             go = Godan(hira)
