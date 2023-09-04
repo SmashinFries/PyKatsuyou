@@ -21,8 +21,11 @@ This tool requires that you input the dictionary form of the verb/adjective. Usi
 ```python
 from tabulate import tabulate
 from pykatsuyou import getInflections
+from igo.tagger import Tagger
 
-data = getInflections('する', jsonIndent=2)
+tt = Tagger() # Optional
+
+data = getInflections('する', jsonIndent=2, tt=tt)
 print(data['json'])
 print(data['list'])
 
