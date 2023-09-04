@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import unittest 
+import unittest
+from unittest import result 
 from src.pykatsuyou.pykatsuyou import getInflections
 
 class TestMain(unittest.TestCase):
